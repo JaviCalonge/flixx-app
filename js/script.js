@@ -37,6 +37,43 @@ async function displayPopularMovies () {
   })
 }
 
+async function displayTVShows () {
+  const { results } = await fetchAPIData("tv/popular")
+
+  console.log(results)
+
+  results.forEach((tv) => {
+    const div = document.createElement("div")
+    div.classList.add("card")
+    div.innerHTML = `
+    <div class="card">
+          <a href="tv-details.html?id=${tv.id}">
+          ${
+            tv.poster_path
+            ? `<img
+                src="https://image.tmdb.org/t/p/w500${tv.poster_path}"
+                class="card-img-top"
+                alt="${tv.title}"
+              />` : `<img
+              src="images/no-image.jpg"
+              class="card-img-top"
+              alt="Show Title"
+            />`
+          }
+            </a>
+            <div class="card-body">
+              <h5 class="card-title">${tv.title}</h5>
+              <p class="card-text">
+                <small class="text-muted">Aired: ${tv.first_air_date}</small>
+              </p>
+            </div>
+          </div>
+      `
+    document.querySelector("#popular-shows").appendChild(div)
+  })
+}
+
+
 //Fetch data from TMDB API
 async function fetchAPIData (endpoint) {
   const API_KEY = "31079babc1cb1333fc04de99dd3e5658"
@@ -73,7 +110,7 @@ function init () {
       displayPopularMovies()
       break
     case "/shows.html":
-      console.log("Shows")
+      displayTVShows()
       break
     case "/movie-details.html":
       console.log("Movie details")
