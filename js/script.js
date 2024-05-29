@@ -3,7 +3,7 @@ const global = {
 }
 
 //Fetch data from TMDB API
-async function fetchApiData () {
+async function fetchAPIData () {
   const API_KEY = "31079babc1cb1333fc04de99dd3e5658"
   const API_URL = "https://api.themoviedb.org/3/"
 
