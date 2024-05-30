@@ -1,5 +1,15 @@
 const global = {
-  currentPage: window.location.pathname
+  currentPage: window.location.pathname,
+  search: {
+    term: "",
+    type: "",
+    page: 1,
+    totalPages: 1
+  },
+  api: {
+    apiKey: "31079babc1cb1333fc04de99dd3e5658",
+    apiUrl: "https://api.themoviedb.org/3/"
+  }
 }
 
 //Display 20 most popular movies
@@ -201,8 +211,6 @@ async function displayShowDetails () {
   document.querySelector("#show-details").appendChild(div)
 }
 
-/////////////////////////////////////////////////////////////////////////
-
 
 //Display Backdrop on details pages
 
@@ -224,6 +232,22 @@ function displayBackgroundImage (type, backgroundPath) {
     document.querySelector("#movie-details").appendChild(overlayDiv)
   } else {
     document.querySelector("#show-details").appendChild(overlayDiv)
+  }
+}
+
+//Search Movies/Shows
+async function search () {
+  const queryString = window.location.search
+  const urlParams = new URLSearchParams(queryString)
+
+  global.search.term = urlParams.get("search-term")
+  global.search.type = urlParams.get("type")
+
+  if (global.search.term !== "" && global.search.term !== null) {
+    const results = await searchAPIData()
+    console.log(results)
+  } else {
+  showAlert("Please, enter a search term")
   }
 }
 
@@ -277,13 +301,38 @@ function initSwiper () {
 
 //Fetch data from TMDB API
 async function fetchAPIData (endpoint) {
-  const API_KEY = "31079babc1cb1333fc04de99dd3e5658"
-  const API_URL = "https://api.themoviedb.org/3/"
+  const API_KEY = global.api.apiKey
+  const API_URL = global.api.apiUrl
 
   showSpinner()
 
   const response = await fetch(
     `${API_URL}${endpoint}?api_key=${API_KEY}&language=en-US`)
+
+  const data = await response.json()
+
+  hideSpinner()
+
+  return data
+}
+
+function showSpinner () {
+  document.querySelector(".spinner").classList.add("show")
+}
+
+function hideSpinner () {
+  document.querySelector(".spinner").classList.remove("show")
+}
+
+//Make request to search
+async function searchAPIData (endpoint) {
+  const API_KEY = global.api.apiKey
+  const API_URL = global.api.apiUrl
+
+  showSpinner()
+
+  const response = await fetch(
+    `${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}`)
 
   const data = await response.json()
 
@@ -312,6 +361,16 @@ function highligthActiveLink () {
   })
 }
 
+//Show Alert
+function showAlert (message, className) {
+  const alertEl = document.createElement("div")
+  alertEl.classList.add("alert", className)
+  alertEl.appendChild(document.createTextNode(message))
+  document.querySelector("#alert").appendChild(alertEl)
+
+  setTimeout(() => alertEl.remove(), 3000)
+}
+
 //Add commas to numbers
 function addCommasToNumbers (number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -335,7 +394,7 @@ function init () {
       displayShowDetails()
       break
     case "/search.html":
-      console.log("Search")
+      search()
       break  
   }
 
