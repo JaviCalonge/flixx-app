@@ -75,6 +75,7 @@ async function displayTVShows () {
 
 //Display Movie Details
 async function displayMovieDetails () {
+  
   const movieId = window.location.search.split("=")[1]
 
   const movie = await fetchAPIData(`movie/${movieId}`)
@@ -119,10 +120,10 @@ async function displayMovieDetails () {
 <div class="details-bottom">
   <h2>Movie Info</h2>
   <ul>
-    <li><span class="text-secondary">Budget:</span> $${movie.budget}</li>
-    <li><span class="text-secondary">Revenue:</span> $${movie.revenue}</li>
-    <li><span class="text-secondary">Runtime:</span> $${movie.runtime}</li>
-    <li><span class="text-secondary">Status:</span> Released</li>
+    <li><span class="text-secondary">Budget:</span> $${addCommasToNumbers(movie.budget)}</li>
+    <li><span class="text-secondary">Revenue:</span> $${addCommasToNumbers(movie.revenue)}</li>
+    <li><span class="text-secondary">Runtime:</span> ${movie.runtime}</li>
+    <li><span class="text-secondary">Status:</span> ${movie.status}</li>
   </ul>
   <h4>Production Companies</h4>
   <div class="list-group">
@@ -171,6 +172,10 @@ function highligthActiveLink () {
   })
 }
 
+//Add commas to numbers
+function addCommasToNumbers (number) {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
 
 //Init App
 function init () {
