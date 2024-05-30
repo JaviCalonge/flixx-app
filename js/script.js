@@ -122,12 +122,12 @@ async function displayMovieDetails () {
   <ul>
     <li><span class="text-secondary">Budget:</span> $${addCommasToNumbers(movie.budget)}</li>
     <li><span class="text-secondary">Revenue:</span> $${addCommasToNumbers(movie.revenue)}</li>
-    <li><span class="text-secondary">Runtime:</span> ${movie.runtime}</li>
+    <li><span class="text-secondary">Runtime:</span> ${movie.runtime} minutes</li>
     <li><span class="text-secondary">Status:</span> ${movie.status}</li>
   </ul>
   <h4>Production Companies</h4>
   <div class="list-group">
-  ${movie.production_companies.map((productor) => `<li>${productor.name}</li>`).join("")}
+  ${movie.production_companies.map((productor) => `${productor.name}`).join(", ")}
   </div>
 </div>
   `
