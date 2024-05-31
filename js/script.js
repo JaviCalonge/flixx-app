@@ -4,7 +4,8 @@ const global = {
     term: "",
     type: "",
     page: 1,
-    totalPages: 1
+    totalPages: 1,
+    totalResults: 0
   },
   api: {
     apiKey: "31079babc1cb1333fc04de99dd3e5658",
@@ -245,7 +246,11 @@ async function search () {
   global.search.type = urlParams.get("type")
 
   if (global.search.term !== "" && global.search.term !== null) {
-    const { results, total_pages, page } = await searchAPIData()
+    const { results, total_pages, page, total_results } = await searchAPIData()
+
+    global.search.page = page
+    global.search.totalPages = total_pages
+    global.search.totalResults = total_results
     
     if (results.length === 0) {
       showAlert("No results found", "error")
@@ -291,6 +296,10 @@ function displaySearchResults (results) {
           </div>
         </div>
     `
+
+    document.querySelector("#search-results-heading").innerHTML = `<h2>${results.length} of 
+    ${global.search.totalResults} Results for ${global.search.term}</h2>`
+
     document.querySelector("#search-results").appendChild(div)
   })
 }
@@ -321,7 +330,7 @@ async function displaySlider () {
 
 function initSwiper () {
   const swiper = new Swiper(".swiper", {
-    slidesPerView: 1,
+    slidesPerView: 2,
     spaceBetween: 30,
     freeMode: true,
     loop: true,
